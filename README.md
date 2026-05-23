@@ -10,20 +10,20 @@ This folder contains utility scripts for:
 Archives all `.zip` files from each configured source folder to its destination folder.
 
 Configured folder groups:
-- `MARK_PCB`
-- `MARK_SVB`
-- `MARK_PCA`
-- `MARK_SVA`
-- `MARKM_PCA`
-- `MARKM_SVA`
+- `GROUP_A1`
+- `GROUP_A2`
+- `GROUP_B1`
+- `GROUP_B2`
+- `GROUP_C1`
+- `GROUP_C2`
 
 Source path pattern:
-- `\\vcn.ds.volvo.net\cli-sd\sd0855\043160\01.GDS Database\<GROUP>\Database from e-mails\`
+- `\\fake-corp-fileserver\dept-share\project123\market-data-root\<GROUP>\incoming-emails\`
 
 Destination path rules:
-- `MARK_PCB`, `MARK_SVB` -> `Base_OK\yyyyMM`
-- `MARK_PCA`, `MARK_SVA` -> `Agrupar excel`
-- `MARKM_PCA`, `MARKM_SVA` -> `OK\yyyyMM`
+- `GROUP_A1`, `GROUP_A2` -> `ARCHIVE_A\yyyyMM`
+- `GROUP_B1`, `GROUP_B2` -> `ARCHIVE_B`
+- `GROUP_C1`, `GROUP_C2` -> `ARCHIVE_C\yyyyMM`
 
 Behavior:
 - Creates destination folder if missing.
@@ -32,11 +32,11 @@ Behavior:
 ---
 
 ### 2. `MarketDataArchiveMondayFiles.ps1`
-Archives `.zip` files for `MARK_PCB` and `MARK_SVB` only when today is Monday.
+Archives `.zip` files for `GROUP_A1` and `GROUP_A2` only when today is Monday.
 
 Additional behavior:
 - Excludes files containing today date (`yyyyMMdd`) in the file name.
-- Destination uses `Base_OK\yyyyMM` for both groups.
+- Destination uses `ARCHIVE_A\yyyyMM` for both groups.
 
 Use case:
 - Weekly (Monday) archive routine without moving files generated today.
@@ -44,19 +44,19 @@ Use case:
 ---
 
 ### 3. `MarketDataArchivePCB_SVB_MondayBankHolidayFiles.ps1`
-Archives `.zip` files for `MARK_PCB` and `MARK_SVB` when either:
+Archives `.zip` files for `GROUP_A1` and `GROUP_A2` when either:
 - Today is Monday, or
 - Today is listed in bank holidays config.
 
 Bank holiday config file:
-- `\\vcn.ds.volvo.net\it-cta\ITPROJ02\002378\DESENV\DBS\AUTOMATOR\MARK_DATA\Automator-MARKET_DATA_Bank_Holidays.txt`
+- `\\fake-corp-config\automation\market-data\config\Bank_Holidays.txt`
 
 Expected date format in config:
 - `dd/MM/yyyy`
 
 Additional behavior:
 - Excludes files containing today date (`yyyyMMdd`) in the file name.
-- Destination uses `Base_OK\yyyyMM`.
+- Destination uses `ARCHIVE_A\yyyyMM`.
 
 Use case:
 - Monday process that also runs on configured bank holidays.
@@ -77,13 +77,13 @@ Special rule:
 - Dealer `06` is converted to empty dealer suffix.
 
 Servers scanned:
-- `BRCTAN341`, `BRCTAN342`, `BRCTAN343`, `BRCTAN344`, `BRCTAN345`, `BRCTAN346`, `BRCTAN347`, `BRCTAN455`, `BRCTAN456`
+- `FAKEAPP341`, `FAKEAPP342`, `FAKEAPP343`, `FAKEAPP344`, `FAKEAPP345`, `FAKEAPP346`, `FAKEAPP347`, `FAKEAPP455`, `FAKEAPP456`
 
 Server path pattern:
-- `\\<SERVER>\trace41$\CIGAM_GDS_<DEALER>\trace`
+- `\\<FAKE_SERVER>\trace$\APP_GDS_<DEALER>\logs`
 
 Output location:
-- Desktop subfolder: `DBS_XML_CIGAM\<QueryString>_<yyyyMMdd>`
+- Desktop subfolder: `FAKE_XML_RESULTS\<QueryString>_<yyyyMMdd>`
 - XML copies: `...\XML`
 - Zip archive: `...\ZIP\<QueryString>_<yyyyMMdd>.zip`
 
@@ -97,8 +97,8 @@ Behavior:
 
 - PowerShell (Windows PowerShell 5.1 or PowerShell 7+).
 - Network access and permissions to:
-  - `\\vcn.ds.volvo.net\...`
-  - `\\BRCTAN***\trace41$\...`
+  - `\\fake-corp-fileserver\...`
+  - `\\FAKE-SRV***\trace$\...`
 - Read/write access to destination folders.
 
 ## How To Run
